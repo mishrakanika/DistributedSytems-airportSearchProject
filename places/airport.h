@@ -16,18 +16,18 @@ extern "C" {
 #define MAXLEN 255
 #define CODELEN 3
 
-typedef char *name;
+typedef char *name_as;
 
-typedef char *code;
+typedef char *code_as;
 
 typedef struct coordinates_as location_as;
 
 typedef struct airport_info_as *airport_list_as;
 
 struct airport_info_as {
-	code airport_code;
-	name city;
-	code state;
+	code_as airport_code;
+	name_as city;
+	code_as state;
 	double distance;
 	airport_list_as next;
 };
@@ -52,8 +52,8 @@ typedef struct list_location_res list_location_res;
 
 #if defined(__STDC__) || defined(__cplusplus)
 #define LISTLOCATION 1
-extern  list_location_res * listlocation_1(location *, CLIENT *);
-extern  list_location_res * listlocation_1_svc(location *, struct svc_req *);
+extern  list_location_res * listlocation_1(location_as *, CLIENT *);
+extern  list_location_res * listlocation_1_svc(location_as *, struct svc_req *);
 extern int locationprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -66,8 +66,8 @@ extern int locationprog_1_freeresult ();
 /* the xdr functions */
 
 #if defined(__STDC__) || defined(__cplusplus)
-extern  bool_t xdr_name (XDR *, name*);
-extern  bool_t xdr_code (XDR *, code*);
+extern  bool_t xdr_name_as (XDR *, name_as*);
+extern  bool_t xdr_code_as (XDR *, code_as*);
 extern  bool_t xdr_location_as (XDR *, location_as*);
 extern  bool_t xdr_airport_list_as (XDR *, airport_list_as*);
 extern  bool_t xdr_airport_info_as (XDR *, airport_info_as*);
@@ -75,8 +75,8 @@ extern  bool_t xdr_coordinates_as (XDR *, coordinates_as*);
 extern  bool_t xdr_list_location_res (XDR *, list_location_res*);
 
 #else /* K&R C */
-extern bool_t xdr_name ();
-extern bool_t xdr_code ();
+extern bool_t xdr_name_as ();
+extern bool_t xdr_code_as ();
 extern bool_t xdr_location_as ();
 extern bool_t xdr_airport_list_as ();
 extern bool_t xdr_airport_info_as ();

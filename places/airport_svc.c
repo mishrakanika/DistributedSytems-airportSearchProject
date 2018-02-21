@@ -57,35 +57,4 @@ locationprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 	return;
 }
 
-int
-main (int argc, char **argv)
-{
-	register SVCXPRT *transp;
 
-	pmap_unset (LOCATIONPROG, LOCATIONVER);
-
-	transp = svcudp_create(RPC_ANYSOCK);
-	if (transp == NULL) {
-		fprintf (stderr, "%s", "cannot create udp service.");
-		exit(1);
-	}
-	if (!svc_register(transp, LOCATIONPROG, LOCATIONVER, locationprog_1, IPPROTO_UDP)) {
-		fprintf (stderr, "%s", "unable to register (LOCATIONPROG, LOCATIONVER, udp).");
-		exit(1);
-	}
-
-	transp = svctcp_create(RPC_ANYSOCK, 0, 0);
-	if (transp == NULL) {
-		fprintf (stderr, "%s", "cannot create tcp service.");
-		exit(1);
-	}
-	if (!svc_register(transp, LOCATIONPROG, LOCATIONVER, locationprog_1, IPPROTO_TCP)) {
-		fprintf (stderr, "%s", "unable to register (LOCATIONPROG, LOCATIONVER, tcp).");
-		exit(1);
-	}
-
-	svc_run ();
-	fprintf (stderr, "%s", "svc_run returned");
-	exit (1);
-	/* NOTREACHED */
-}

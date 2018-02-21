@@ -30,18 +30,3 @@ locationprog_1(char *host)
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */
 }
-
-
-int
-main (int argc, char *argv[])
-{
-	char *host;
-
-	if (argc < 2) {
-		printf ("usage: %s server_host\n", argv[0]);
-		exit (1);
-	}
-	host = argv[1];
-	locationprog_1 (host);
-exit (0);
-}
