@@ -26,27 +26,27 @@ xdr_code (XDR *xdrs, code *objp)
 }
 
 bool_t
-xdr_location (XDR *xdrs, location *objp)
+xdr_location_as (XDR *xdrs, location_as *objp)
 {
 	register int32_t *buf;
 
-	 if (!xdr_coordinates (xdrs, objp))
+	 if (!xdr_coordinates_as (xdrs, objp))
 		 return FALSE;
 	return TRUE;
 }
 
 bool_t
-xdr_airport_list (XDR *xdrs, airport_list *objp)
+xdr_airport_list_as (XDR *xdrs, airport_list_as *objp)
 {
 	register int32_t *buf;
 
-	 if (!xdr_pointer (xdrs, (char **)objp, sizeof (struct airport_info), (xdrproc_t) xdr_airport_info))
+	 if (!xdr_pointer (xdrs, (char **)objp, sizeof (struct airport_info_as), (xdrproc_t) xdr_airport_info_as))
 		 return FALSE;
 	return TRUE;
 }
 
 bool_t
-xdr_airport_info (XDR *xdrs, airport_info *objp)
+xdr_airport_info_as (XDR *xdrs, airport_info_as *objp)
 {
 	register int32_t *buf;
 
@@ -58,13 +58,13 @@ xdr_airport_info (XDR *xdrs, airport_info *objp)
 		 return FALSE;
 	 if (!xdr_double (xdrs, &objp->distance))
 		 return FALSE;
-	 if (!xdr_airport_list (xdrs, &objp->next))
+	 if (!xdr_airport_list_as (xdrs, &objp->next))
 		 return FALSE;
 	return TRUE;
 }
 
 bool_t
-xdr_coordinates (XDR *xdrs, coordinates *objp)
+xdr_coordinates_as (XDR *xdrs, coordinates_as *objp)
 {
 	register int32_t *buf;
 
@@ -84,7 +84,7 @@ xdr_list_location_res (XDR *xdrs, list_location_res *objp)
 		 return FALSE;
 	switch (objp->errno) {
 	case 0:
-		 if (!xdr_airport_info (xdrs, &objp->list_location_res_u.list_location_res))
+		 if (!xdr_airport_info_as (xdrs, &objp->list_location_res_u.list_location_res))
 			 return FALSE;
 		break;
 	default:

@@ -8,6 +8,7 @@
 #include <iostream>
 #include "places.h"
 #include "tries.h"
+#include "airport.h"
 
 list_airport_res *
 listairport_1_svc(user_input *argp, struct svc_req *rqstp)
@@ -33,16 +34,41 @@ listairport_1_svc(user_input *argp, struct svc_req *rqstp)
 		{
 			std::cout<<pNode->longitude;
 			std::cout<<pNode->latitude;
+			std::cout<<pNode->entry;
 			fflush(stdout);
 		} else
 		{
 			std::cout<<"Partial search returned empty!";
 			fflush(stdout);
+			result.errno=1;
+			return &result;
 		}
 
-	/*
-	 * insert server code here
-	 */
+	// 	CLIENT *clnt;
+	// 	list_location_res  *result_1;
+	// 	location  listlocation_1_arg;
+	// 	char host[10];
+	// 	strcpy(host,"localhost");
+	//
+	// #ifndef	DEBUG
+	// 	clnt = clnt_create (host, LOCATIONPROG, LOCATIONVER, "udp");
+	// 	if (clnt == NULL) {
+	// 		clnt_pcreateerror (host);
+	// 		exit (1);
+	// 	}
+	// #endif	/* DEBUG */
+  // listlocation_1_arg.latitude = pNode->latitude;
+	// listlocation_1_arg.longitude = pNode->longitude;
+	//
+	//
+  //  result_1 = listlocation_1(&listlocation_1_arg, clnt);
+	//  if (result_1 == (list_location_res *) NULL) {
+ 	// 	clnt_perror (clnt, "call failed");
+	// 	result.errno=1;
+	// 	return &result;
+ 	// }
+
+
 
 	return &result;
 }

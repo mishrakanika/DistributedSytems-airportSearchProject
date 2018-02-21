@@ -2,18 +2,18 @@ const MAXLEN = 255;
 const CODELEN = 3;
 typedef string name<MAXLEN>;
 typedef string code<CODELEN>;
-typedef struct coordinates location;
-typedef struct airport_info *airport_list;
+typedef struct coordinates_as location_as;
+typedef struct airport_info_as *airport_list_as;
 
-struct airport_info {
-code airport_code; 
+struct airport_info_as {
+code airport_code;
   name city;
    code state;
    double distance;
-   airport_list next;
+   airport_list_as next;
 };
 
-struct coordinates {
+struct coordinates_as {
    double latitude;
    double  longitude;
 };
@@ -21,7 +21,7 @@ struct coordinates {
 
 union list_location_res switch (int errno) {
 case 0:
-struct airport_info list_location_res;  
+struct airport_info_as list_location_res;
 default:
 void;  };
 
@@ -32,4 +32,3 @@ program LOCATIONPROG
            list_location_res LISTLOCATION(location)=1;
        } =1;
        } = 0x20001112;
-
