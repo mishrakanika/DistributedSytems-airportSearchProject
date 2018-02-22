@@ -42,7 +42,7 @@ typedef struct coordinates_as coordinates_as;
 struct list_location_res {
 	int errno;
 	union {
-		struct airport_info_as list_location_res;
+		airport_list_as list_location_res;
 	} list_location_res_u;
 };
 typedef struct list_location_res list_location_res;

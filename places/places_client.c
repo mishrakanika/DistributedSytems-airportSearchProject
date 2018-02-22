@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include "places.h"
 #include "errno.h"
+#include "iostream"
 
 
 void
@@ -32,11 +33,26 @@ airportprog_1(char *host, name city,name state)
 	}
 #ifndef	DEBUG
 
-//    if (result_1->errno != 0) {
-//
-//        perror("The Following error occurred:");
-//        exit(1);
-//    }
+   // if (result_1->errno != 0) {
+	 //
+   //     perror("The Following error occurred:");
+   //     exit(1);
+   // }
+
+	 std::cout<<result_1->list_airport_res_u.result.input_res.city<<", ";
+	 std::cout<<result_1->list_airport_res_u.result.input_res.state<<": ";
+	 std::cout<<result_1->list_airport_res_u.result.input_res.latlong.latitude<<", ";
+	 std::cout<<result_1->list_airport_res_u.result.input_res.latlong.longitude<<"\n";
+
+   airport_list curr = result_1->list_airport_res_u.result.list;
+	 while(curr != NULL)
+	 {
+			std::cout<<"code = "<<curr->airport_code<<", ";
+      std::cout<<"name = "<<curr->city<<", ";
+			std::cout<<"state = "<<curr->state<<", ";
+			std::cout<<"distance = "<<curr->distance<<" miles"<<"\n";
+			curr = curr->next;
+	 }
 
 
 	clnt_destroy (clnt);

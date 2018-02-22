@@ -11,9 +11,35 @@ listlocation_1_svc(location_as *argp, struct svc_req *rqstp)
 {
 	static list_location_res  result;
 
-	/*
-	 * insert server code here
-	 */
+
+printf("Hello in airport server");
+	 result.errno = 0;
+
+	 airport_info_as* linkedListHead, *curr;
+	 linkedListHead = curr = NULL;
+	 for (int index = 0; index < 5; index++)
+	 {
+		 if (linkedListHead == NULL)
+		 {
+			 linkedListHead = new airport_info_as;
+			 curr = linkedListHead;
+			 curr->next = NULL;
+		 }
+		 else
+		 {
+			 curr->next = new airport_info_as;
+			 curr = curr->next;
+			 curr->next = NULL;
+		 }
+
+		 curr->city = strdup("Seattle");
+		 curr->state = strdup("WA");
+		 curr->airport_code = strdup("SEA");
+		 curr->distance = index + 1;
+
+	 }
+
+	 result.list_location_res_u.list_location_res = linkedListHead;
 
 	return &result;
 }

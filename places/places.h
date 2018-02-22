@@ -44,6 +44,7 @@ typedef struct coordinates coordinates;
 struct user_input {
 	name city;
 	code state;
+	location latlong;
 };
 typedef struct user_input user_input;
 

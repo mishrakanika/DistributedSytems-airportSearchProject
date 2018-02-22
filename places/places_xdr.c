@@ -94,6 +94,8 @@ xdr_user_input (XDR *xdrs, user_input *objp)
 		 return FALSE;
 	 if (!xdr_code (xdrs, &objp->state))
 		 return FALSE;
+	 if (!xdr_location (xdrs, &objp->latlong))
+		 return FALSE;
 	return TRUE;
 }
 

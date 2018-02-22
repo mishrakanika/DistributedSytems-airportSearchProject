@@ -21,7 +21,7 @@ struct coordinates_as {
 
 union list_location_res switch (int errno) {
 case 0:
-struct airport_info_as list_location_res;
+airport_list_as list_location_res;
 default:
 void;  };
 

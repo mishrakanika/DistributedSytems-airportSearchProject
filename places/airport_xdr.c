@@ -84,7 +84,7 @@ xdr_list_location_res (XDR *xdrs, list_location_res *objp)
 		 return FALSE;
 	switch (objp->errno) {
 	case 0:
-		 if (!xdr_airport_info_as (xdrs, &objp->list_location_res_u.list_location_res))
+		 if (!xdr_airport_list_as (xdrs, &objp->list_location_res_u.list_location_res))
 			 return FALSE;
 		break;
 	default:
