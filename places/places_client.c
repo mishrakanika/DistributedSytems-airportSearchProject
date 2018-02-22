@@ -6,7 +6,6 @@
 
 #include <stdlib.h>
 #include "places.h"
-#include "errno.h"
 #include "iostream"
 
 
@@ -33,11 +32,11 @@ airportprog_1(char *host, name city,name state)
 	}
 #ifndef	DEBUG
 
-   // if (result_1->errno != 0) {
-	 //
-   //     perror("The Following error occurred:");
-   //     exit(1);
-   // }
+  if(result_1->errno != 0) {
+    std::cout<<"City not found , please try again";
+       perror("The Following error occurred:");
+       exit(1);
+    }
 
 	 std::cout<<result_1->list_airport_res_u.result.input_res.city<<", ";
 	 std::cout<<result_1->list_airport_res_u.result.input_res.state<<": ";
@@ -54,6 +53,7 @@ airportprog_1(char *host, name city,name state)
 			curr = curr->next;
 	 }
 
+    clnt_freeres (clnt,(xdrproc_t) xdr_list_airport_res, (char *)result_1);
 
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */

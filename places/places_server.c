@@ -20,38 +20,37 @@ listairport_1_svc(user_input *argp, struct svc_req *rqstp)
 	state = strdup(argp->state);
 	static list_airport_res  result;
 
-    std::cout<<"Entering verymain";
-		verymain();
+    loadtrie();
+		loadtrie();
     trieNode *pNode = (struct trieNode *) malloc(sizeof(struct trieNode));
-    std::cout<<"Done with verymain!";
-		fflush(stdout);
+
 		char searchStr[100];
 		strcpy(searchStr, argp->state);
 		strcat(searchStr, argp->city);
+
+		  int i;
+		  for(i=0; searchStr[i]; i++)
+			{
+			  searchStr[i] = tolower(searchStr[i]);
+			}
+
     pNode = partialSearch(root->children, searchStr);
-    std::cout<<"after  partial search";
-		fflush(stdout);
-		if (pNode != NULL)
+
+		if(pNode == NULL)
 		{
-			std::cout<<pNode->longitude;
-			std::cout<<pNode->latitude;
-			std::cout<<pNode->entry+2;
-			fflush(stdout);
-		} else
-		{
-			std::cout<<"Partial search returned empty!";
-			fflush(stdout);
+
 			result.errno=1;
 			return &result;
 		}
+
+    xdr_free((xdrproc_t)xdr_list_airport_res, (char *)&result);
 
 		CLIENT *clnt;
 		list_location_res  *result_1;
 		location_as  listlocation_as_arg;
 		char host[10];
 		strcpy(host,"localhost");
-    std::cout<<"calling localhost";
-		fflush(stdout);
+
 	#ifndef	DEBUG
 		clnt = clnt_create (host, LOCATIONPROG, LOCATIONVER, "udp");
 		if (clnt == NULL) {
@@ -69,12 +68,15 @@ listairport_1_svc(user_input *argp, struct svc_req *rqstp)
 	 if (result_1 == (list_location_res *) NULL)
 	 {
  		clnt_perror (clnt, "call failed");
-		result.errno=1;
-		return &result;
+		exit(1);
  	 }
 
-	std::cout<<"Successfully result return from airport server";
-	fflush(stdout);
+	 if(result_1->errno>0)
+	 {
+	 	clnt_freeres(clnt, (xdrproc_t)xdr_list_location_res, (char *)result_1);
+	 	result.errno=2;
+	 	return &result;
+	 }
 
 	result.errno = 0;
 	result.list_airport_res_u.result.input_res.city = strdup(pNode->entry+2);
@@ -111,10 +113,10 @@ listairport_1_svc(user_input *argp, struct svc_req *rqstp)
 		linkedListFromAirportServ = linkedListFromAirportServ->next;
 	}
   //result.list_airport_res_u.result = *result_1;
-	std::cout<<"Successfully result return to main client";
-	fflush(stdout);
-	// strcpy(result.input_res.city , substr(pNode->entry,2));
-	// strcpy(result.input_res.state , state);
+
+	xdr_free((xdrproc_t)xdr_list_location_res, (char *)result_1);
+
+	clnt_destroy (clnt);
 
 	result.list_airport_res_u.result.list = linkedListForClient;
 	return &result;

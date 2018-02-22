@@ -16,11 +16,6 @@
 #define AIRPORTPROJECT_TRIES_H
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//      TRIE DATA STRUCTURE                                                     //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 typedef struct trieNode {
     char key;
     char *entry;
@@ -143,9 +138,6 @@ void TrieAddEntry(trieNode_t **root, char *key, char *entry_name, double lon, do
     pTrav->next->previous = pTrav;
 
 
-    //printf("Inserting [%c] as neighbour of [%c] \n",pTrav->next->key, pTrav->key);
-
-
     if(!(*key))
         return;
 
@@ -156,7 +148,6 @@ void TrieAddEntry(trieNode_t **root, char *key, char *entry_name, double lon, do
         pTrav->children = createTrieNode(*key, "\0", 0xffffffff, 0xffffffff);
         pTrav->children->parent = pTrav;
 
-        //printf("Inserting: [%c]\n",pTrav->children->key);
 
         key++;
     }
@@ -222,7 +213,7 @@ trieNode_t *partialSearch(trieNode_t *root, const char *key){
                 found = curr;
                 //printf("%s", curr->entry);
                 break; }
-                /* else if will continue to travel down the trie in the case that a partial match with a trie entry is found */
+
             else if (*key == '\0')
             {
                 //printf("Moving along\n");
@@ -230,8 +221,8 @@ trieNode_t *partialSearch(trieNode_t *root, const char *key){
                 key--;
                 break;}
         }
-        //printf("%s", curr->entry);
-        if (found == NULL)
+
+                if (found == NULL)
             return NULL;
 
         if (*key == '\0')
@@ -245,11 +236,6 @@ trieNode_t *partialSearch(trieNode_t *root, const char *key){
     }
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                           TRIE DATA STRUCTURE ENDS                                                //
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 trieNode_t *root;
 
@@ -296,14 +282,13 @@ Place *  parseLine(char * line){
     return p;
 };
 
-void verymain(){
+void loadtrie(){
     createNode(&root);
     FILE *placesFile;
     char line[255];
 
-    printf("\n BEFORE READING FILE \n");
+
     placesFile = fopen("/home/st/mishrakanika/airportProject/places/places2k.txt", "r");
-    printf("\n after FOPEN \n");
 
     if(placesFile != NULL){
 
