@@ -20,7 +20,7 @@ listairport_1_svc(user_input *argp, struct svc_req *rqstp)
 	state = strdup(argp->state);
 	static list_airport_res  result;
 
-    loadtrie();
+    loadtrie(); //calling it to create the trei
 		loadtrie();
     trieNode *pNode = (struct trieNode *) malloc(sizeof(struct trieNode));
 
@@ -28,23 +28,26 @@ listairport_1_svc(user_input *argp, struct svc_req *rqstp)
 		strcpy(searchStr, argp->state);
 		strcat(searchStr, argp->city);
 
+    //conerting the user input to lower case for searching in trie
 		  int i;
 		  for(i=0; searchStr[i]; i++)
 			{
 			  searchStr[i] = tolower(searchStr[i]);
 			}
-
+//calling the function to search the user input into the tries
     pNode = partialSearch(root->children, searchStr);
 
 		if(pNode == NULL)
 		{
-
+//if city not found return error
 			result.errno=1;
 			return &result;
 		}
 
+    //freeing the previously allocated memory
     xdr_free((xdrproc_t)xdr_list_airport_res, (char *)&result);
 
+    //created the airport server client
 		CLIENT *clnt;
 		list_location_res  *result_1;
 		location_as  listlocation_as_arg;
@@ -63,7 +66,7 @@ listairport_1_svc(user_input *argp, struct svc_req *rqstp)
   listlocation_as_arg.latitude = pNode->latitude;
 	listlocation_as_arg.longitude = pNode->longitude;
 
-
+//calling airport server
    result_1 = listlocation_1(&listlocation_as_arg, clnt);
 	 if (result_1 == (list_location_res *) NULL)
 	 {
@@ -73,11 +76,13 @@ listairport_1_svc(user_input *argp, struct svc_req *rqstp)
 
 	 if(result_1->errno>0)
 	 {
+         //freeing the memory and returning  error if location is not available
 	 	clnt_freeres(clnt, (xdrproc_t)xdr_list_location_res, (char *)result_1);
 	 	result.errno=2;
 	 	return &result;
 	 }
 
+    //copying the airport server result to places server result
 	result.errno = 0;
 	result.list_airport_res_u.result.input_res.city = strdup(pNode->entry+2);
   result.list_airport_res_u.result.input_res.state = strdup(state);
@@ -89,7 +94,7 @@ listairport_1_svc(user_input *argp, struct svc_req *rqstp)
 	airport_info* linkedListForClient, *curr;
 
 	linkedListForClient = curr = NULL;
-
+//copying returned link list into the places server result
 	while(linkedListFromAirportServ != NULL)
 	{
 		if (linkedListForClient == NULL)
@@ -117,7 +122,7 @@ listairport_1_svc(user_input *argp, struct svc_req *rqstp)
 	xdr_free((xdrproc_t)xdr_list_location_res, (char *)result_1);
 
 	clnt_destroy (clnt);
-
+//returning result from airport server and user input to places client
 	result.list_airport_res_u.result.list = linkedListForClient;
 	return &result;
 }

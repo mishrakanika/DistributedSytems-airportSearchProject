@@ -23,21 +23,28 @@ airportprog_1(char *host, name city,name state)
 		exit (1);
 	}
 #endif	/* DEBUG */
+    
+    //copied the user entry in the structure
+    
     listairport_1_arg.city = city;
     listairport_1_arg.state = state;
 
+    //calling the places server
 	result_1 = listairport_1(&listairport_1_arg, clnt);
 	if (result_1 == (list_airport_res *) NULL) {
 		clnt_perror (clnt, "call failed");
 	}
 #ifndef	DEBUG
 
+    //return error if city not found
   if(result_1->errno != 0) {
     std::cout<<"City not found , please try again";
        perror("The Following error occurred:");
        exit(1);
     }
 
+    //printing the result to the user
+    
 	 std::cout<<result_1->list_airport_res_u.result.input_res.city<<", ";
 	 std::cout<<result_1->list_airport_res_u.result.input_res.state<<": ";
 	 std::cout<<result_1->list_airport_res_u.result.input_res.latlong.latitude<<", ";
@@ -48,11 +55,12 @@ airportprog_1(char *host, name city,name state)
 	 {
 			std::cout<<"code = "<<curr->airport_code<<", ";
       std::cout<<"name = "<<curr->city<<", ";
-			std::cout<<"state = "<<curr->state<<", ";
 			std::cout<<"distance = "<<curr->distance<<" miles"<<"\n";
 			curr = curr->next;
 	 }
 
+    //freeing the client memory
+    
     clnt_freeres (clnt,(xdrproc_t) xdr_list_airport_res, (char *)result_1);
 
 	clnt_destroy (clnt);
@@ -70,6 +78,9 @@ main (int argc, char *argv[])
 		printf("usage: %s server_host\n", argv[0]);
 		exit (1);
 	}
+    
+    //copying the users arguments
+    
 	host = argv[1];
     host = argv[1];
     city = argv[2];
