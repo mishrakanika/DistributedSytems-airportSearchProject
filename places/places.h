@@ -27,38 +27,38 @@ typedef struct coordinates location;
 typedef struct airport_info *airport_list;
 
 struct airport_info {
-	code airport_code;
-	name city;
-	code state;
-	double distance;
-	airport_list next;
+    code airport_code;
+    name city;
+    code state;
+    double distance;
+    airport_list next;
 };
 typedef struct airport_info airport_info;
 
 struct coordinates {
-	double latitude;
-	double longitude;
+    double latitude;
+    double longitude;
 };
 typedef struct coordinates coordinates;
 
 struct user_input {
-	name city;
-	code state;
-	location latlong;
+    name city;
+    code state;
+    location latlong;
 };
 typedef struct user_input user_input;
 
 struct final_result {
-	struct user_input input_res;
-	airport_list list;
+    struct user_input input_res;
+    airport_list list;
 };
 typedef struct final_result final_result;
 
 struct list_airport_res {
-	int errno;
-	union {
-		final_result_u result;
-	} list_airport_res_u;
+    int errno;
+    union {
+        final_result_u result;
+    } list_airport_res_u;
 };
 typedef struct list_airport_res list_airport_res;
 

@@ -16,7 +16,7 @@ typedef struct kdnode kdtree;
 
 struct kdnode
 {
-	char state[3];
+    char state[3];
   char city[64];
   char airport_code[3];
   double coords[3];
@@ -35,85 +35,85 @@ list_location_res *
 listlocation_1_svc(location_as *argp, struct svc_req *rqstp)
 {
     //freeing the prvious allocated memory
-	static list_location_res  result;
-	xdr_free((xdrproc_t)xdr_list_location_res, (char *)&result);
+    static list_location_res  result;
+    xdr_free((xdrproc_t)xdr_list_location_res, (char *)&result);
 
-	result.errno=0;
-	airport_list_as* airList = &result.list_location_res_u.list_location_res;
-	
-	kdtree list[5];
-	double coords[2];
-	coords[0] = argp->latitude;
-	coords[1] = argp->longitude;
-	int x = 0;
+    result.errno=0;
+    airport_list_as* airList = &result.list_location_res_u.list_location_res;
+
+    kdtree list[5];
+    double coords[2];
+    coords[0] = argp->latitude;
+    coords[1] = argp->longitude;
+    int x = 0;
     //initializing list
-	for(x = 0; x<5; x++){
-		list[x].coords[0]=0;
-		list[x].coords[1]=0;
-		list[x].coords[2]=10000;
-		list[x].state[0]='a';
-		list[x].city[0]='a';
-		list[x].airport_code[0]='a';
-	}
+    for(x = 0; x<5; x++){
+        list[x].coords[0]=0;
+        list[x].coords[1]=0;
+        list[x].coords[2]=10000;
+        list[x].state[0]='a';
+        list[x].city[0]='a';
+        list[x].airport_code[0]='a';
+    }
     
     //calling finction to create kd tree
     main2();
-	//get closest 5 airports
+    //get closest 5 airports
     
     //calling function to find the 5 nearest airports
-	NearestFive(head, list, coords, 1);
+    NearestFive(head, list, coords, 1);
    
     
     
-	int i = 0;
-	airport_list_as al;
+    int i = 0;
+    airport_list_as al;
     //copying the result
-	for(i = 0; i<5; i++){
-		al = (airport_info_as *)malloc(sizeof(struct airport_info_as));
-		al->distance = list[i].coords[2];
-		al->state = strdup(list[i].state);
-		al->city = strdup(list[i].city);
-		al->airport_code = strdup(list[i].airport_code);
-		al->next = NULL;
-		*airList = al;
-		airList = &al->next;
-	}
+    for(i = 0; i<5; i++){
+        al = (airport_info_as *)malloc(sizeof(struct airport_info_as));
+        al->distance = list[i].coords[2];
+        al->state = strdup(list[i].state);
+        al->city = strdup(list[i].city);
+        al->airport_code = strdup(list[i].airport_code);
+        al->next = NULL;
+        *airList = al;
+        airList = &al->next;
+    }
 //returning the result
-	return &result;
+    return &result;
 }
 
 //Create the tree given a list of kdnodes
 //Returns head of the tree
 kdtree *kd_create(kdtree list[], int left, int right, int axis)
 {
-	if(left>right){
-		return NULL;
-	}
-	
-	kdtree *tree= (kdtree *)malloc(sizeof(struct kdnode));
-	
-	quickSort(list, left, right, axis);
+    if(left>right){
+        return NULL;
+    }
 
-	int median = left+((right-left)/2);
-	strcpy(tree->state,list[median].state);
-	strcpy(tree->city,list[median].city);
-	strcpy(tree->airport_code,list[median].airport_code);
-	tree->coords[0]= list[median].coords[0];
-	tree->coords[1]= list[median].coords[1];	
-	if(left<right){
-		tree->left = kd_create(list, left, median-1, (axis+1)%2);
-		tree->right = kd_create(list, median+1, right, (axis+1)%2);
-	}
-	
-	return tree;
+    kdtree *tree= (kdtree *)malloc(sizeof(struct kdnode));
+
+    quickSort(list, left, right, axis);
+
+    int median = left+((right-left)/2);
+    strcpy(tree->state,list[median].state);
+    strcpy(tree->city,list[median].city);
+    strcpy(tree->airport_code,list[median].airport_code);
+    tree->coords[0]= list[median].coords[0];
+    tree->coords[1]= list[median].coords[1];
+    if(left<right){
+        tree->left = kd_create(list, left, median-1, (axis+1)%2);
+        tree->right = kd_create(list, median+1, right, (axis+1)%2);
+    }
+
+    return tree;
 }
 
 //Quicksort of the list
 void quickSort(kdtree list[], int left, int right, int axis) {
-	if( left < right ){
-		int p = partition(list, left, right, axis);
-		quickSort(list, left, p-1, axis);
-		quickSort(list, p+1, right, axis);
+    if( left < right ){
+        int p = partition(list, left, right, axis);
+        quickSort(list, left, p-1, axis);
+        quickSort(list, p+1, right, axis);
   }
 }
 
@@ -123,15 +123,15 @@ int partition(kdtree list[], int left, int right, int axis) {
   double pivot = list[left].coords[axis];
   i = left; j = right+1;
   while(1){
-	do ++i;
-	while( list[i].coords[axis] <= pivot && i <= right );
-	do --j;
-	while( list[j].coords[axis] > pivot );
-	if( i >= j )
-	  break;
-	t = list[i];
-	list[i] = list[j];
-	list[j] = t;
+    do ++i;
+    while( list[i].coords[axis] <= pivot && i <= right );
+    do --j;
+    while( list[j].coords[axis] > pivot );
+    if( i >= j )
+      break;
+    t = list[i];
+    list[i] = list[j];
+    list[j] = t;
   }
   t = list[left];
   list[left] = list[j];
@@ -147,19 +147,19 @@ double distance(double lat1, double lon1, double lat2, double lon2, char unit){
   double theta, dist;
   theta = lon1 - lon2;
   dist = sin(deg2rad(lat1)) * sin(deg2rad(lat2)) + cos(deg2rad(lat1)) *
-	cos(deg2rad(lat2)) * cos(deg2rad(theta));
+    cos(deg2rad(lat2)) * cos(deg2rad(theta));
   dist = acos(dist);
   dist = rad2deg(dist);
   dist = dist * 60 * 1.1515;
   switch(unit) {
   case 'M':
-	break;
+    break;
   case 'K':
-	dist = dist * 1.609344;
-	break;
+    dist = dist * 1.609344;
+    break;
   case 'N':
-	dist = dist * 0.8684;
-	break;
+    dist = dist * 0.8684;
+    break;
   }
   return (dist);
 }
@@ -179,7 +179,7 @@ double rad2deg(double rad) {
 
 //Searching 5 closest nodes
 void copyNode(kdtree *h, kdtree n[]){
-	strcpy(n[4].state, h->state);
+    strcpy(n[4].state, h->state);
   strcpy(n[4].city, h->city);
   strcpy(n[4].airport_code, h->airport_code);
   n[4].coords[0]=h->coords[0];
@@ -190,101 +190,101 @@ void copyNode(kdtree *h, kdtree n[]){
 
 void NearestFive(kdtree *hd, kdtree list[], double coords[], int axis) {
   if(hd!=NULL) {
-	if(hd->coords[axis]>coords[axis]) {
-	  NearestFive(hd->left, list, coords, (axis+1)%2);
-	  if(list[4].coords[0] == 0 && list[4].coords[1] == 0) {
-		copyNode(hd, list);
-		list[4].coords[2]=distance(coords[0], coords[1],
-								   hd->coords[0], hd->coords[1],'M');
-		quickSort(list, 0, 4, 2);
-	  } else if(distance(coords[0], coords[1],
-						hd->coords[0], hd->coords[1],'M')<
-			   distance(coords[0], coords[1],
-						list[4].coords[0], list[4].coords[1],'M')) {
-		copyNode(hd, list);
-		list[4].coords[2] = distance(coords[0], coords[1],
-								   hd->coords[0], hd->coords[1],'M');
-		quickSort(list, 0, 4, 2);
-	  }
-	  double lat1 = coords[0];
-	  double lon1 = coords[1];
-	  double lat2 = hd->coords[0];
-	  double lon2 = hd->coords[1];
-	  if(axis == 1) {
-		lat2 = lat1;
-	  } else {
-		lon2 = lon1;
-	  }
-	  if(list[4].coords[0] == 0 && list[4].coords[1] == 0||
-		 distance(lat1, lon1, lat2, lon2,'M')<
-		 distance(list[4].coords[0],list[4].coords[1],
-				  coords[0],coords[1],'M'))
-		NearestFive(hd->right, list, coords, (axis+1)%2);
-	} else {
-	  NearestFive(hd->right, list, coords, (axis+1)%2);
-	  if(list[4].coords[0]==0&&list[4].coords[1]==0) {
-		copyNode(hd, list);
-		list[4].coords[2]=distance(coords[0], coords[1],
-								   hd->coords[0], hd->coords[1],'M');
-		quickSort(list, 0, 4, 2);
-	  } else if(distance(coords[0], coords[1],
-						hd->coords[0], hd->coords[1],'M')<
-			   distance(coords[0], coords[1],
-						list[4].coords[0], list[4].coords[1],'M')){
-		copyNode(hd, list);
-		list[4].coords[2]=distance(coords[0], coords[1],
-								   hd->coords[0], hd->coords[1],'M');
-		quickSort(list, 0, 4, 2);
-	  }
-	  double lat1=coords[0];
-	  double lon1=coords[1];
-	  double lat2=hd->coords[0];
-	  double lon2=hd->coords[1];
-	  if(axis==1){
-		lat2=lat1;
-	  }else{
-		lon2=lon1;
-	  }
-	  if(list[4].coords[0]==0&&list[4].coords[1]==0||
-		 distance(lat1,lon1,lat2,lon2,'M')<
-		 distance(list[4].coords[0],list[4].coords[1],
-				  coords[0],coords[1],'M'))
-		NearestFive(hd->left, list, coords, (axis+1)%2);
-	}
+    if(hd->coords[axis]>coords[axis]) {
+      NearestFive(hd->left, list, coords, (axis+1)%2);
+      if(list[4].coords[0] == 0 && list[4].coords[1] == 0) {
+        copyNode(hd, list);
+        list[4].coords[2]=distance(coords[0], coords[1],
+                                   hd->coords[0], hd->coords[1],'M');
+        quickSort(list, 0, 4, 2);
+      } else if(distance(coords[0], coords[1],
+                        hd->coords[0], hd->coords[1],'M')<
+               distance(coords[0], coords[1],
+                        list[4].coords[0], list[4].coords[1],'M')) {
+        copyNode(hd, list);
+        list[4].coords[2] = distance(coords[0], coords[1],
+                                   hd->coords[0], hd->coords[1],'M');
+        quickSort(list, 0, 4, 2);
+      }
+      double lat1 = coords[0];
+      double lon1 = coords[1];
+      double lat2 = hd->coords[0];
+      double lon2 = hd->coords[1];
+      if(axis == 1) {
+        lat2 = lat1;
+      } else {
+        lon2 = lon1;
+      }
+      if(list[4].coords[0] == 0 && list[4].coords[1] == 0||
+         distance(lat1, lon1, lat2, lon2,'M')<
+         distance(list[4].coords[0],list[4].coords[1],
+                  coords[0],coords[1],'M'))
+        NearestFive(hd->right, list, coords, (axis+1)%2);
+    } else {
+      NearestFive(hd->right, list, coords, (axis+1)%2);
+      if(list[4].coords[0]==0&&list[4].coords[1]==0) {
+        copyNode(hd, list);
+        list[4].coords[2]=distance(coords[0], coords[1],
+                                   hd->coords[0], hd->coords[1],'M');
+        quickSort(list, 0, 4, 2);
+      } else if(distance(coords[0], coords[1],
+                        hd->coords[0], hd->coords[1],'M')<
+               distance(coords[0], coords[1],
+                        list[4].coords[0], list[4].coords[1],'M')){
+        copyNode(hd, list);
+        list[4].coords[2]=distance(coords[0], coords[1],
+                                   hd->coords[0], hd->coords[1],'M');
+        quickSort(list, 0, 4, 2);
+      }
+      double lat1=coords[0];
+      double lon1=coords[1];
+      double lat2=hd->coords[0];
+      double lon2=hd->coords[1];
+      if(axis==1){
+        lat2=lat1;
+      }else{
+        lon2=lon1;
+      }
+      if(list[4].coords[0]==0&&list[4].coords[1]==0||
+         distance(lat1,lon1,lat2,lon2,'M')<
+         distance(list[4].coords[0],list[4].coords[1],
+                  coords[0],coords[1],'M'))
+        NearestFive(hd->left, list, coords, (axis+1)%2);
+    }
   }
 }
 
 void main2() {
-	FILE *file = fopen("airport-locations.txt", "r");
-	if(file == NULL) {
-		printf("File not found.\n");
-		return;
-	}
+    FILE *file = fopen("airport-locations.txt", "r");
+    if(file == NULL) {
+        printf("File not found.\n");
+        return;
+    }
 
-	kdtree sample[1500];
-	char str[255], *latitude, *longitude, *temp;
-	int i = 0;
+    kdtree sample[1500];
+    char str[255], *latitude, *longitude, *temp;
+    int i = 0;
 
-	while(fgets(str, 255, file)!=NULL) {
-		if(str[0]=='[' && str[1]!='a') {
-			sample[i].airport_code[0]=str[1];
-			sample[i].airport_code[1]=str[2];
-			sample[i].airport_code[2]=str[3];
-			latitude=strchr(str, ' ');
-			sample[i].coords[0]=strtod(latitude+1,&longitude);
-			sample[i].coords[1]=strtod(longitude,&temp);
-			strcpy(str, temp);
-			int x=0, y=0;
-			while((str[x]=='\t' || str[x]==' ') && str[x]!='\0'){
-				x++;
-			}
-			while(str[x]!='\n' && str[x]!='\0'){
-				sample[i].city[y]=str[x];
-				x++;
-				y++;
-			}
-			i++;
-		}
-	}
-	head = kd_create(sample, 0, i-1, 1);
+    while(fgets(str, 255, file)!=NULL) {
+        if(str[0]=='[' && str[1]!='a') {
+            sample[i].airport_code[0]=str[1];
+            sample[i].airport_code[1]=str[2];
+            sample[i].airport_code[2]=str[3];
+            latitude=strchr(str, ' ');
+            sample[i].coords[0]=strtod(latitude+1,&longitude);
+            sample[i].coords[1]=strtod(longitude,&temp);
+            strcpy(str, temp);
+            int x=0, y=0;
+            while((str[x]=='\t' || str[x]==' ') && str[x]!='\0'){
+                x++;
+            }
+            while(str[x]!='\n' && str[x]!='\0'){
+                sample[i].city[y]=str[x];
+                x++;
+                y++;
+            }
+            i++;
+        }
+    }
+    head = kd_create(sample, 0, i-1, 1);
 }

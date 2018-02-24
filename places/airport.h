@@ -25,25 +25,25 @@ typedef struct coordinates_as location_as;
 typedef struct airport_info_as *airport_list_as;
 
 struct airport_info_as {
-	code_as airport_code;
-	name_as city;
-	code_as state;
-	double distance;
-	airport_list_as next;
+    code_as airport_code;
+    name_as city;
+    code_as state;
+    double distance;
+    airport_list_as next;
 };
 typedef struct airport_info_as airport_info_as;
 
 struct coordinates_as {
-	double latitude;
-	double longitude;
+    double latitude;
+    double longitude;
 };
 typedef struct coordinates_as coordinates_as;
 
 struct list_location_res {
-	int errno;
-	union {
-		airport_list_as list_location_res;
-	} list_location_res_u;
+    int errno;
+    union {
+        airport_list_as list_location_res;
+    } list_location_res_u;
 };
 typedef struct list_location_res list_location_res;
 
